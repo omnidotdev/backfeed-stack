@@ -17,6 +17,7 @@ for service in services:
             print(color.yellow("🗺️ Setting `%s`..." % key))
             os.putenv(key, val)
 
+
 # bootstrap project services
 for service in services:
     name = service.keys()[0]
@@ -34,9 +35,8 @@ for service in services:
     # checkout only if path does not already exist
     # ! NB: without this path existence check, data loss may occur due to overwriting. Be very careful if disabling this.
     if not os.path.exists(path):
-        # print(color.yellow("💡 %s does not exist, cloning..." % path))
-        print(color.yellow("💡 %s does not exist" % path))
-        # git_checkout(repo, path)
+        print(color.yellow("💡 %s does not exist, cloning..." % path))
+        git_checkout(repo, path)
     else:
         print(color.green("✅ %s already exists" % path))
 
