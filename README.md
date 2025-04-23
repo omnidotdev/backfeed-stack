@@ -16,3 +16,7 @@ To get started after setting up the service configuration, run `tilt up`. The `T
 
 > [!WARNING]
 > Services might have their own setup requirements, such as environment variable configuration. Consult the service README to make sure you have satisfied all of the initial requirements.
+
+## License
+
+The code in this repository is licensed under MIT, &copy; Omni LLC. See [LICENSE.md](LICENSE.md) for more information.

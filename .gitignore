@@ -2,6 +2,7 @@
 *
 
 !.gitignore
+!LICENSE.md
 !README.md
 !services.yaml.template
 !Tiltfile
