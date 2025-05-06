@@ -2,6 +2,9 @@
 
 This is the metarepo for the Backfeed service stack.
 
+- Backfeed app: https://github.com/omnidotdev/backfeed-app
+- Backfeed API: https://github.com/omnidotdev/backfeed-api
+
 ## Prerequisites
 
 - Install [Tilt](https://tilt.dev/)
