@@ -30,8 +30,6 @@ for service in services:
     if "path" in values:
         path = values["path"]
 
-    local_resource("dev-%s" % name, serve_cmd="cd %s && bun dev" % path, labels=[name])
-
     # checkout only if path does not already exist
     # ! NB: without this path existence check, data loss may occur due to overwriting. Be very careful if disabling this.
     if not os.path.exists(path):
