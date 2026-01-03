@@ -11,6 +11,8 @@ services:
   # ----------------------------
   - gatekeeper:
       repo: https://github.com/omnidotdev/gatekeeper#master
+  - aether:
+      repo: https://github.com/omnidotdev/aether#master
   - backfeed-api:
       repo: https://github.com/omnidotdev/backfeed-api#master
   - backfeed-app:
