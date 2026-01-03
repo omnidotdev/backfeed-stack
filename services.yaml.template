@@ -9,8 +9,8 @@ services:
   #          - TILT_CUSTOM_REPO_ENV_PATH: ../repo-path/.env.local
   #
   # ----------------------------
-  - hidra-app:
-      repo: https://github.com/omnidotdev/hidra-app#master
+  - gatekeeper:
+      repo: https://github.com/omnidotdev/gatekeeper#master
   - backfeed-api:
       repo: https://github.com/omnidotdev/backfeed-api#master
   - backfeed-app:
