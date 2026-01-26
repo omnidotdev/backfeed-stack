@@ -6,3 +6,6 @@
 !README.md
 !services.yaml.template
 !Tiltfile
+!compose.yaml
+!compose.dev.yaml
+!.env.local.template

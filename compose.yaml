@@ -1,0 +1,48 @@
+services:
+  db:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${DB_NAME:-backfeed}
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:?DB_PASSWORD is required}
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${DB_USER:-postgres}"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+    ports:
+      - "${DB_PORT:-5432}:5432"
+
+  api:
+    image: ghcr.io/omnidotdev/backfeed-api:latest
+    environment:
+      SELF_HOSTED: "true"
+      DATABASE_URL: postgres://${DB_USER:-postgres}:${DB_PASSWORD}@db:5432/${DB_NAME:-backfeed}
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required}
+      PORT: "4000"
+      HOST: "0.0.0.0"
+      NODE_ENV: production
+      CORS_ALLOWED_ORIGINS: http://localhost:3000
+    depends_on:
+      db:
+        condition: service_healthy
+    ports:
+      - "${API_PORT:-4000}:4000"
+
+  app:
+    image: ghcr.io/omnidotdev/backfeed-app:latest
+    environment:
+      NODE_ENV: production
+      VITE_SELF_HOSTED: "true"
+      VITE_BASE_URL: http://localhost:3000
+      VITE_API_BASE_URL: http://api:4000
+      AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required}
+    depends_on:
+      - api
+    ports:
+      - "${APP_PORT:-3000}:3000"
+
+volumes:
+  db_data:
