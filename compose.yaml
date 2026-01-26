@@ -39,6 +39,17 @@ services:
       VITE_BASE_URL: http://localhost:3000
       VITE_API_BASE_URL: http://api:4000
       AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required}
+      # Authentication (email/password enabled by default, OAuth providers optional)
+      # Google OAuth (optional)
+      GOOGLE_CLIENT_ID: ${GOOGLE_CLIENT_ID:-}
+      GOOGLE_CLIENT_SECRET: ${GOOGLE_CLIENT_SECRET:-}
+      # GitHub OAuth (optional)
+      GITHUB_CLIENT_ID: ${GITHUB_CLIENT_ID:-}
+      GITHUB_CLIENT_SECRET: ${GITHUB_CLIENT_SECRET:-}
+      # Generic OIDC (optional, for enterprise SSO)
+      OIDC_ISSUER: ${OIDC_ISSUER:-}
+      OIDC_CLIENT_ID: ${OIDC_CLIENT_ID:-}
+      OIDC_CLIENT_SECRET: ${OIDC_CLIENT_SECRET:-}
     depends_on:
       - api
     ports:
