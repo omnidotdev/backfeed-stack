@@ -9,8 +9,8 @@ services:
   #          - TILT_CUSTOM_REPO_ENV_PATH: ../repo-path/.env.local
   #
   # ----------------------------
-  - gatekeeper:
-      repo: https://github.com/omnidotdev/gatekeeper#master
+  - gatekeeper-app:
+      repo: https://github.com/omnidotdev/gatekeeper-app#master
   - aether:
       repo: https://github.com/omnidotdev/aether#master
   - backfeed-api:
