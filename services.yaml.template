@@ -12,7 +12,7 @@ services:
   - gatekeeper-app:
       repo: https://github.com/omnidotdev/gatekeeper-app#master
   - aether:
-      repo: https://github.com/omnidotdev/aether#master
+      repo: https://github.com/omnidotdev/aether-stack#master
   - backfeed-api:
       repo: https://github.com/omnidotdev/backfeed-api#master
   - backfeed-app:
