@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres:16-alpine
+    image: postgres:18-alpine
     environment:
       POSTGRES_DB: ${DB_NAME:-backfeed}
       POSTGRES_USER: ${DB_USER:-postgres}
@@ -16,7 +16,7 @@ services:
       - "${DB_PORT:-5432}:5432"
 
   api:
-    image: ghcr.io/omnidotdev/backfeed-api:latest
+    image: manifold.omni.dev/omnidotdev/backfeed-api:latest
     environment:
       DATABASE_URL: postgres://${DB_USER:-postgres}:${DB_PASSWORD}@db:5432/${DB_NAME:-backfeed}
       AUTH_SECRET: ${AUTH_SECRET:?AUTH_SECRET is required}
@@ -31,7 +31,7 @@ services:
       - "${API_PORT:-4000}:4000"
 
   app:
-    image: ghcr.io/omnidotdev/backfeed-app:latest
+    image: manifold.omni.dev/omnidotdev/backfeed-app:latest
     environment:
       NODE_ENV: production
       VITE_BASE_URL: http://localhost:3000
