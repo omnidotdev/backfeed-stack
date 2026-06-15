@@ -1,6 +1,8 @@
 services:
   db:
-    image: postgres:18-alpine
+    # pgvector-enabled PostgreSQL 18 (matches prod) for the feedback brain's
+    # embedding/dedupe/clustering; backfeed-api's migrate step enables the extension
+    image: pgvector/pgvector:pg18
     environment:
       POSTGRES_DB: ${DB_NAME:-backfeed}
       POSTGRES_USER: ${DB_USER:-postgres}
