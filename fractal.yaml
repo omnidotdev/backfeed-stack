@@ -1,0 +1,134 @@
+# Omni App descriptor for Backfeed
+# Canonical, human-readable source of truth for deploying Backfeed on Fractal
+# Translated faithfully from compose.yaml (self-host). Do not invent values
+# Only vars that compose actually sets are modeled here
+
+# Descriptor-format version, not an app or release version
+version: "1"
+
+app:
+  name: Backfeed
+  icon: "📣"
+  category: Customer feedback
+  blurb: "Centralized board for collecting, aggregating, and prioritizing customer feedback and feature requests"
+  repoUrl: https://github.com/omnidotdev/backfeed-stack
+  license: Apache-2.0
+
+services:
+  db:
+    # pgvector-enabled PostgreSQL 18 (matches prod); the api migrate step
+    # enables the extension for embedding, dedupe, and clustering
+    # Third-party upstream image, keeps its upstream tag
+    source:
+      image:
+        repository: pgvector/pgvector
+        tag: pg18
+    serviceType: database
+    datastore: true
+    expose:
+      port: 5432
+    deploy:
+      env:
+        - name: POSTGRES_DB
+          required: false
+          value: "backfeed"
+          description: "database name; defaults to backfeed when unset"
+        - name: POSTGRES_USER
+          required: false
+          value: "postgres"
+          description: "database role; defaults to postgres when unset"
+        - name: POSTGRES_PASSWORD
+          required: true
+          secret: true
+          generate: random
+          description: "database superuser password; the deploy layer generates it when unset"
+
+  api:
+    source:
+      image:
+        repository: api.manifold.omni.dev/omni/backfeed-api
+        # git-hash pin, Omni versioning scheme TBD
+        tag: e32c32607a382f2096493ba754e9d0c365f2b9b8
+    serviceType: web
+    expose:
+      port: 4000
+    deploy:
+      env:
+        - name: DATABASE_URL
+          required: true
+          value: "postgres://postgres:${DB_PASSWORD}@db:5432/backfeed"
+          description: "Postgres connection string wired to the db service; DB_PASSWORD resolves to the generated db secret"
+        - name: AUTH_SECRET
+          required: true
+          secret: true
+          generate: random
+          description: "signing secret for authentication; must match the app service; the deploy layer generates it when unset"
+        - name: PORT
+          required: false
+          value: "4000"
+          description: "port the api listens on"
+        - name: HOST
+          required: false
+          value: "0.0.0.0"
+          description: "bind address for the api"
+        - name: NODE_ENV
+          required: false
+          value: "production"
+          description: "Node runtime environment"
+        - name: CORS_ALLOWED_ORIGINS
+          required: false
+          value: "http://localhost:3000"
+          description: "comma-separated origins allowed to call the api; set to the deployed app origin in production"
+
+  app:
+    source:
+      image:
+        repository: api.manifold.omni.dev/omni/backfeed-app
+        # git-hash pin, Omni versioning scheme TBD
+        tag: c3581b0ef2c4827d88f6260bb4f1c692f9206f47
+    serviceType: web
+    expose:
+      port: 3000
+    deploy:
+      env:
+        - name: NODE_ENV
+          required: false
+          value: "production"
+          description: "Node runtime environment"
+        - name: VITE_BASE_URL
+          required: false
+          value: "http://localhost:3000"
+          description: "public base URL of the app; set to the deployed app origin in production"
+        - name: VITE_API_BASE_URL
+          required: false
+          value: "http://api:4000"
+          description: "base URL the app uses to reach the api service"
+        - name: AUTH_SECRET
+          required: true
+          secret: true
+          generate: random
+          description: "signing secret for authentication; must match the api service; the deploy layer generates it when unset"
+        - name: GOOGLE_CLIENT_ID
+          required: false
+          description: "Google OAuth client id; Google sign-in disabled when unset"
+        - name: GOOGLE_CLIENT_SECRET
+          required: false
+          secret: true
+          description: "Google OAuth client secret; Google sign-in disabled when unset"
+        - name: GITHUB_CLIENT_ID
+          required: false
+          description: "GitHub OAuth client id; GitHub sign-in disabled when unset"
+        - name: GITHUB_CLIENT_SECRET
+          required: false
+          secret: true
+          description: "GitHub OAuth client secret; GitHub sign-in disabled when unset"
+        - name: OIDC_ISSUER
+          required: false
+          description: "generic OIDC issuer URL for enterprise SSO; OIDC sign-in disabled when unset"
+        - name: OIDC_CLIENT_ID
+          required: false
+          description: "generic OIDC client id; OIDC sign-in disabled when unset"
+        - name: OIDC_CLIENT_SECRET
+          required: false
+          secret: true
+          description: "generic OIDC client secret; OIDC sign-in disabled when unset"
